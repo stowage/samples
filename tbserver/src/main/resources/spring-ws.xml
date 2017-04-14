@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:util="http://www.springframework.org/schema/util" xmlns:jaxws="http://cxf.apache.org/jaxws"
+    xmlns:jaxrs="http://cxf.apache.org/jaxrs" xmlns:cxf="http://cxf.apache.org/core"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd
+       http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd http://cxf.apache.org/jaxrs 
+       http://cxf.apache.org/schemas/jaxrs.xsd http://cxf.apache.org/core
+       http://cxf.apache.org/schemas/core.xsd">
+
+    <description>Web services config</description>
+
+    <import resource="classpath:META-INF/cxf/cxf.xml" />
+    <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+    <import resource="classpath:META-INF/cxf/cxf-extension-jaxws.xml" /> 
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+    
+    <bean id="aegisBinding" class="org.apache.cxf.aegis.databinding.AegisDatabinding" scope="prototype">
+        <property name="aegisContext">
+            <bean class="org.apache.cxf.aegis.AegisContext">
+                <!-- Inheritance support -->
+                <property name="writeXsiTypes" value="true"/>
+            </bean>
+        </property>
+    </bean>
+    
+    <bean id="jaxws-aegis-service-factory"
+          class="org.apache.cxf.jaxws.support.JaxWsServiceFactoryBean"
+          scope="prototype">
+        <property name="dataBinding" ref="aegisBinding"/>
+        <property name="serviceConfigurations">
+            <list>
+                <bean class="org.apache.cxf.jaxws.support.JaxWsServiceConfiguration"/>
+                <bean class="org.apache.cxf.aegis.databinding.AegisServiceConfiguration"/>
+                <bean class="org.apache.cxf.service.factory.DefaultServiceConfiguration"/>
+            </list>
+        </property>
+    </bean>
+    
+    <jaxws:endpoint address="/tb/candles" implementor="#candleX">
+        <jaxws:serviceFactory>
+            <ref bean='jaxws-aegis-service-factory' />
+        </jaxws:serviceFactory>
+    </jaxws:endpoint>
+
+</beans>

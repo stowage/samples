@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:si="http://www.springframework.org/schema/integration"
+       xmlns:file="http://www.springframework.org/schema/integration/file"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+    <aop:aspectj-autoproxy />
+
+    <task:executor id="threadPoolTaskExecutor" pool-size="100" queue-capacity="10"/>
+
+    <task:annotation-driven executor="threadPoolTaskExecutor" />
+
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="nestedTransactionAllowed" value="true"/>
+        <property name="rollbackOnCommitFailure" value="true"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <bean id="transactionTemplate"
+          class="org.springframework.transaction.support.TransactionTemplate">
+        <constructor-arg ref="transactionManager"/>
+    </bean>
+    
+    <bean id="candlesDao" class="org.exam.tb.CandlesDaoImpl">
+        <constructor-arg ref="dataSource"/>
+    </bean>
+    
+    <bean id="candlesCollator" class="org.exam.tb.CandlesCollator"/>
+    
+	<bean id="candleX" class="org.exam.tb.ws.CandleService">
+		<constructor-arg ref="candlesCollator"/>
+		<constructor-arg ref="candlesDao"/>
+	</bean>
+	
+	
+	<bean id="candleJob" class="org.exam.tb.CandleJob">
+		<constructor-arg ref="candlesCollator"/>
+	</bean>
+	  
+    <bean id="schedulerFactory"
+        class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref local="reduceCandlesJob" />
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="reduceCandlesJob"
+        class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+        <property name="startDelay" value="1000" />
+        <property name="repeatInterval" value="1000" />
+        
+        <property name="jobDetail">
+            <bean 
+                class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+                <property name="name" value="reduceCandlesJob" />
+                <property name="targetObject" ref="candleJob" />
+                <property name="targetMethod" value="processIt" />
+                <property name="concurrent" value="false" />
+            </bean>
+        </property>
+    </bean>
+	  
+</beans>
