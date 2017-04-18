@@ -1,4 +1,4 @@
-package org.exam.tb;
+package io.stowage.trades;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,7 +20,7 @@ public class CandlesDaoImpl implements CandlesDao {
 	
 	
 	@Override
-	public void emit(String ticker, CandleType type, CandleObject candle) {
+	public void record(String ticker, CandleType type, CandleObject candle) {
 		String sql = "INSERT INTO candles" + type.name() + "(ticker, ts, op, hi, lo, cl) values(?,?,?,?,?,?)";
 		jdbcTemplate.update(sql, new Object[]{ticker, 
     			candle.getTs(), candle.getO(), candle.getH(), candle.getL(), candle.getC()});

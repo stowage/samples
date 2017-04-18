@@ -1,4 +1,4 @@
-package org.exam.tb;
+package io.stowage.trades;
 
 import java.util.Date;
 import java.util.concurrent.locks.Lock;

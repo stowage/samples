@@ -222,7 +222,7 @@
         <repository>
             <id>codehaus</id>
             <name>Codehaus maven repository</name>
-            <url>http://repository.codehaus.org/</url>
+            <url>http://repo.maven.apache.org/maven2</url>
         </repository>
         <repository>
             <id>apache.incubating.releases</id>

@@ -1,4 +1,4 @@
-package org.exam.tb;
+package io.stowage.trades;
 
 import static org.junit.Assert.*;
 

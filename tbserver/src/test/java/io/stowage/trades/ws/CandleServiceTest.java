@@ -1,11 +1,11 @@
-package org.exam.tb.ws;
+package io.stowage.trades.ws;
 
 import static org.junit.Assert.*;
 
 import java.text.ParseException;
 
-import org.exam.tb.CandleObject;
-import org.exam.tb.CandleType;
+import io.stowage.trades.CandleObject;
+import io.stowage.trades.CandleType;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package org.exam.tb;
+package io.stowage.trades;
 
 import java.util.Set;
 
@@ -13,7 +13,7 @@ public class CandleJob {
 	public void processIt() {
 		Set<String> symbols = collator.getSymbols();
 		for(String ticker: symbols) {
-			collator.reduce(ticker);
+			collator.putCandle(ticker);
 		}
 	}
 	

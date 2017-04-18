@@ -1,4 +1,4 @@
-package org.exam.tb;
+package io.stowage.trades;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -32,7 +32,7 @@ public class CandlesCollator {
 		};
 	}
 	
-	public void map(String ticker, QuoteObject quote) {
+	public void putIntoQueue(String ticker, QuoteObject quote) {
 		Queue<QuoteObject> queue = quotes.get(ticker);
 		
 		if(queue == null) {
@@ -49,7 +49,7 @@ public class CandlesCollator {
 	}
 	
 	@Async
-	public void reduce(String ticker) {
+	public void putCandle(String ticker) {
 		
 		ConcurrentMap<CandleType, CandleObject> candle = candles.get(ticker);
 		
@@ -145,7 +145,7 @@ public class CandlesCollator {
 				//TODO: candle timestamp could be invalid how should we avoid this
 				//TODO: try to find other solution
 				if(CandleUtils.isCandlePeriodNotLess(type, candleTs, quoteTs)) {
-					candlesDao.emit(ticker, type, new CandleObject(candle.getO(),
+					candlesDao.record(ticker, type, new CandleObject(candle.getO(),
 						candle.getH(), candle.getL(), candle.getC(), 
 						candle.getTs()));
 				}

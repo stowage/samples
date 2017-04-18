@@ -1,4 +1,4 @@
-package org.exam.tb;
+package io.stowage.trades;
 
 public enum CandleType {
 	M1,

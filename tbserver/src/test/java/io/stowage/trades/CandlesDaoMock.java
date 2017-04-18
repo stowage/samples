@@ -1,4 +1,4 @@
-package org.exam.tb;
+package io.stowage.trades;
 
 import java.util.Date;
 import static org.junit.Assert.*;
@@ -8,7 +8,7 @@ import java.util.List;
 public class CandlesDaoMock implements CandlesDao {
 
 	@Override
-	public void emit(String ticker, CandleType type, CandleObject candle) {
+	public void record(String ticker, CandleType type, CandleObject candle) {
 		
 		if(candle.getO() != 2 || candle.getC() !=4 || candle.getH() != 4 || candle.getL() !=1)
 			fail("Got "+ candle.getTs() + "," + candle.getO() + "," + candle.getH() + "," + candle.getL() + "," + candle.getC());

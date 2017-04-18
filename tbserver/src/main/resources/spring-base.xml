@@ -33,19 +33,19 @@
         <constructor-arg ref="transactionManager"/>
     </bean>
     
-    <bean id="candlesDao" class="org.exam.tb.CandlesDaoImpl">
+    <bean id="candlesDao" class="io.stowage.trades.CandlesDaoImpl">
         <constructor-arg ref="dataSource"/>
     </bean>
     
-    <bean id="candlesCollator" class="org.exam.tb.CandlesCollator"/>
+    <bean id="candlesCollator" class="io.stowage.trades.CandlesCollator"/>
     
-	<bean id="candleX" class="org.exam.tb.ws.CandleService">
+	<bean id="candleX" class="io.stowage.trades.ws.CandleService">
 		<constructor-arg ref="candlesCollator"/>
 		<constructor-arg ref="candlesDao"/>
 	</bean>
 	
 	
-	<bean id="candleJob" class="org.exam.tb.CandleJob">
+	<bean id="candleJob" class="io.stowage.trades.CandleJob">
 		<constructor-arg ref="candlesCollator"/>
 	</bean>
 	  

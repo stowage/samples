@@ -1,4 +1,4 @@
-package org.exam.tb.ws;
+package io.stowage.trades.ws;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -6,14 +6,13 @@ import java.util.List;
 
 import javax.jws.WebService;
 
-import org.exam.tb.CandleObject;
-import org.exam.tb.CandleType;
-import org.exam.tb.CandlesCollator;
-import org.exam.tb.CandlesDao;
-import org.exam.tb.QuoteObject;
-import org.exam.tb.ws.ICandleService;
+import io.stowage.trades.CandleType;
+import io.stowage.trades.CandleObject;
+import io.stowage.trades.CandlesCollator;
+import io.stowage.trades.CandlesDao;
+import io.stowage.trades.QuoteObject;
 
-@WebService( endpointInterface = "org.exam.tb.ws.ICandleService" )
+@WebService( endpointInterface = "ICandleService" )
 public class CandleService implements ICandleService {
 	
 	private static final ThreadLocal<SimpleDateFormat> dateFormat = new ThreadLocal<SimpleDateFormat>(){
@@ -33,12 +32,12 @@ public class CandleService implements ICandleService {
 	}
 		
 	public void passQuoteDataFast(String ticker, String ts, double price) throws ParseException {
-		collator.map(ticker, new QuoteObject(price, dateFormat.get().parse(ts)));
-		collator.reduce(ticker);
+		collator.putIntoQueue(ticker, new QuoteObject(price, dateFormat.get().parse(ts)));
+		collator.putCandle(ticker);
 	}
 	
 	public void passQuoteData(String ticker, String ts, double price) throws ParseException {
-		collator.map(ticker, new QuoteObject(price, dateFormat.get().parse(ts)));
+		collator.putIntoQueue(ticker, new QuoteObject(price, dateFormat.get().parse(ts)));
 	}
 	
 	public List<CandleObject> getCandles(String ticker, CandleType type, String from, String to) throws ParseException {

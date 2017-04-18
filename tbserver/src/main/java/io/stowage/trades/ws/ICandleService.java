@@ -1,12 +1,12 @@
-package org.exam.tb.ws;
+package io.stowage.trades.ws;
 
 import java.text.ParseException;
 import java.util.List;
 
 import javax.jws.WebService;
 
-import org.exam.tb.CandleObject;
-import org.exam.tb.CandleType;
+import io.stowage.trades.CandleType;
+import io.stowage.trades.CandleObject;
 
 @WebService
 public interface ICandleService {
